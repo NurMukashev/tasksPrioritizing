@@ -1,3 +1,38 @@
+Развертывание:
+- Сделать git clone или через url или через ssh
+- у меня OpenServer, мои основные локальные настройки .env следующие
+	APP_NAME=tasksPrioritizing
+	APP_ENV=local
+	APP_DEBUG=true
+	APP_URL=http://127.0.0.1:8000
+	APP_TIMEZONE=Asia/Almaty
+	DB_CONNECTION=mysql
+	DB_HOST=MySQL-5.7
+	DB_PORT=3306
+	DB_DATABASE=tasksPrioritizing
+	DB_USERNAME=root
+	DB_PASSWORD=
+- composer install
+- php artisan migrate
+- php artisan db:seed
+- php artisan l5-swagger:generate и перейти .../api/documentation
+- Тест: php artisan test --filter TaskPriorityTest
+
+Мои заметки
+- id() в Laravel по умолчанию тоже bigInteger unsigned и auto-increment, поэтому я не стал делать $table->bigIncrements('id');
+- для importance использовал unsignedTinyInteger, для меньшей энергозатратности
+- description оставил string, в валидации поставил max:255
+
+- в валидации в методе authorize сделал return true; в обоих файлах, так как требований по правам не увидел
+- добавил в Handler.php обработку ошибок валидации
+
+- пошагово делал отдельный commmit
+
+- логику метода prioritize можно было перенести в Resource контроллер, но это бы заняло время
+- документацию сделал через Swagger, маршрут .../api/documentation
+- после теста была ошибка в методе priority, добавил values()
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

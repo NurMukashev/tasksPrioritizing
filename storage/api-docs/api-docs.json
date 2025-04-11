@@ -11,8 +11,19 @@
                 "tags": [
                     "Tasks"
                 ],
-                "summary": "Получить список всех задач",
+                "summary": "Получить список всех задач с фильтрацией по статусу",
                 "operationId": "471d938a3bfaeb6fbd981d7c3e2728b0",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Фильтрация задач по статусу (например: TODO, IN_PROGRESS, COMPLETED)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Список задач",
