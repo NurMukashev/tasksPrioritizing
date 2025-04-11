@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -19,9 +21,10 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        //
+        $task = Task::create($request->validated());
+        return new TaskResource($task);
     }
 
     /**
@@ -29,15 +32,18 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $task = Task::findOrFail($id);
+        return new TaskResource($task);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTaskRequest $request, string $id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->update($request->validated());
+        return new TaskResource($task);
     }
 
     /**
@@ -45,6 +51,7 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Task::findOrFail($id)->delete();
+        return response()->json(['message' => 'Task deleted successfully.']);
     }
 }
