@@ -178,7 +178,9 @@ class TaskController extends Controller
             $task->priority_score = $days > 0 ? $task->importance * (1 / $days) : 0;
             $task->is_overdue = $days < 0;
             return $task;
-        })->sortByDesc('priority_score');
+        })
+            ->sortByDesc('priority_score')
+            ->values();
 
         return TaskResource::collection($tasks);
     }
