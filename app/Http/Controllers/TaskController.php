@@ -8,10 +8,34 @@ use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Info(
+ *     title="Task API",
+ *     version="1.0.0",
+ *     description="API для управления задачами"
+ * )
+ */
+
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/tasks",
+     *     summary="Получить список всех задач",
+     *     tags={"Tasks"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Список задач",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Task")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,7 +43,20 @@ class TaskController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/tasks",
+     *     summary="Создать новую задачу",
+     *     tags={"Tasks"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Task")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Задача успешно создана",
+     *         @OA\JsonContent(ref="#/components/schemas/Task")
+     *     )
+     * )
      */
     public function store(StoreTaskRequest $request)
     {
@@ -28,7 +65,27 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/tasks/{id}",
+     *     summary="Получить задачу по ID",
+     *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID задачи",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Данные задачи",
+     *         @OA\JsonContent(ref="#/components/schemas/Task")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Задача не найдена"
+     *     )
+     * )
      */
     public function show(string $id)
     {
@@ -37,7 +94,27 @@ class TaskController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/tasks/{id}",
+     *     summary="Обновить задачу",
+     *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID задачи",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Task")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Задача успешно обновлена",
+     *         @OA\JsonContent(ref="#/components/schemas/Task")
+     *     )
+     * )
      */
     public function update(UpdateTaskRequest $request, string $id)
     {
@@ -47,7 +124,26 @@ class TaskController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/tasks/{id}",
+     *     summary="Удалить задачу",
+     *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID задачи",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Задача успешно удалена"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Задача не найдена"
+     *     )
+     * )
      */
     public function destroy(string $id)
     {
@@ -55,6 +151,27 @@ class TaskController extends Controller
         return response()->json(['message' => 'Task deleted successfully.']);
     }
 
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/tasks/priority",
+     *     summary="Получить задачи по приоритету",
+     *     tags={"Tasks"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Список задач отсортированный по приоритету",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Task")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function priority(){
         $tasks = Task::all()->map(function ($task) {
             $days = now()->diffInDays($task->deadline, false);
