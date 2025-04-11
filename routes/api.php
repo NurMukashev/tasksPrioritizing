@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('tasks/priority', [TaskController::class, 'priority']);
 Route::apiResource('tasks', TaskController::class);
 

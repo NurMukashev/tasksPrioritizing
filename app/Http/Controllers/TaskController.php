@@ -54,4 +54,15 @@ class TaskController extends Controller
         Task::findOrFail($id)->delete();
         return response()->json(['message' => 'Task deleted successfully.']);
     }
+
+    public function priority(){
+        $tasks = Task::all()->map(function ($task) {
+            $days = now()->diffInDays($task->deadline, false);
+            $task->priority_score = $days > 0 ? $task->importance * (1 / $days) : 0;
+            $task->is_overdue = $days < 0;
+            return $task;
+        })->sortByDesc('priority_score');
+
+        return TaskResource::collection($tasks);
+    }
 }
