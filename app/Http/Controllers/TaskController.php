@@ -21,8 +21,17 @@ class TaskController extends Controller
     /**
      * @OA\Get(
      *     path="/api/tasks",
-     *     summary="Получить список всех задач",
+     *     summary="Получить список всех задач с фильтрацией по статусу",
      *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Фильтрация задач по статусу (например: TODO, IN_PROGRESS, COMPLETED)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Список задач",
@@ -37,10 +46,18 @@ class TaskController extends Controller
      *     )
      * )
      */
-    public function index()
+
+    public function index(Request $request) //Потом добавил фильтрацию
     {
-        return TaskResource::collection(Task::all());
+        $query = Task::query();
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return TaskResource::collection($query->get());
     }
+
 
     /**
      * @OA\Post(
